@@ -1,0 +1,22 @@
+
+struct coord
+{
+    double x, y;
+    char a;
+}
+
+coord mediana;
+
+void main()
+{
+    int count = 2;
+    coord a, b;
+    a.x = 0.2;
+    a.y = 5.;
+    a.a = 'A';
+    b.x = 3.4; b.y=5;
+    b.a = 'B';
+    mediana.x = a.x + (a.x - b.x)/2;
+    mediana.y = a.y + (a.y - b.y)/2;
+    mediana.a = 'M';
+}
