@@ -6,10 +6,62 @@ namespace Lexer
 enum TokenType
 {
     ID,
-    NUMBER,
-    CHAR
+    NumInt,
+    NumFloat,
+    NumExp,
+    Char,
+    SDot,
+    SCom,
+    SSem,
+    SBrackO,
+    SBrackC,
+    SBracsO,
+    SBracsC,
+    PAssign,
+    PPlus,
+    PMinus,
+    PMulti,
+    PDiv,
+    PMod,
+    PLess,
+    PLessEq,
+    PGret,
+    PGretEq,
+    PEquals,
+    PNotEq,
+    KWvoid,
+    KWint,
+    KWsigned,
+    KWunsigned,
+    KWdouble,
+    KWchar,
+    KWwhile
 };
 
-string tokenNames[100];
+enum MetaLiter
+{
+    Alpha,          // alphabet
+    Digit,          // digit
+    Space,          // space, \n, \t
+    Semicolon,      // ;
+    Dot,            // .
+    Comma,          // ,
+    Equals,         // =
+    Plus,           // +
+    Minus,          // -
+    Multi,          // *
+    Slash,          // /
+    Percent,        // %
+    SignLess,       // <
+    SignGreater,    // >
+    Exclamation,    // !
+    BracketOpen,    // (
+    BracketClose,   // )
+    BracesOpen,     // {
+    BracesClose,    // }
+    Other
+};
+
+string tokenNames[50];
 
 }
