@@ -17,6 +17,7 @@ public:
 
 private:
     void reset();
+    void scan(string);
 
     list<MessageRecord> *errors;
     list<MessageRecord> *warnings;
@@ -44,4 +45,7 @@ enum class State
     S6,
     S7
 };
-} // namespace Lexer
+
+MetaLiter translit(char c);
+
+}
