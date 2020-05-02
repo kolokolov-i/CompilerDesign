@@ -10,8 +10,8 @@ using namespace Lexer;
 class LLk : public AbstractCompiler
 {
 private:
-    std::list<MessageRecord> errors;
-    std::list<MessageRecord> warnings;
+    std::list<MessageRecord> *errors;
+    std::list<MessageRecord> *warnings;
     std::list<Token> tokens;
     std::list<std::string> listing;
 

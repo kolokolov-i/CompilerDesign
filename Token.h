@@ -13,4 +13,4 @@ public:
     int length;
     std::string *image;
 };
-} // namespace Lexer
+}
