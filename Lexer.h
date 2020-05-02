@@ -34,7 +34,6 @@ enum class State
     S2A,
     S2B,
     S2C,
-    S2C,
     S2D,
     S2E,
     S2F,
