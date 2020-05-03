@@ -27,8 +27,26 @@ list<Token> Scanner::scan(list<string> text)
 void Scanner::reset()
 {
     tokens.clear();
+    resetLexem();
+}
+
+void Scanner::flushLexem(TokenType type)
+{
+    tokens.push_back(Token(curLine, curPos, lexemLen, curLexem.str(), type));
+    resetLexem();
+}
+
+void Scanner::resetLexem()
+{
     state = State::S0;
     curLexem.str("");
+    lexemLen = 0;
+}
+
+void Scanner::expandLex(char c)
+{
+    curLexem.put(c);
+    lexemLen++;
 }
 
 void Scanner::scan(string s)
@@ -45,49 +63,87 @@ void Scanner::scan(string s)
             switch (w)
             {
             case MetaLiter::Alpha:
+                expandLex(c);
+                state = State::S1;
                 break;
             case MetaLiter::Digit:
-                break;
-            case MetaLiter::Space:
-                break;
-            case MetaLiter::Semicolon:
+                expandLex(c);
+                state = State::S2A;
                 break;
             case MetaLiter::Dot:
-                break;
-            case MetaLiter::Comma:
+                expandLex('0');
+                expandLex(c);
+                state = State::S2B;
                 break;
             case MetaLiter::Apostrophe:
-                break;
-            case MetaLiter::Equals:
-                break;
-            case MetaLiter::Plus:
-                break;
-            case MetaLiter::Minus:
-                break;
-            case MetaLiter::Multi:
-                break;
-            case MetaLiter::Slash:
-                break;
-            case MetaLiter::Percent:
-                break;
-            case MetaLiter::SignLess:
-                break;
-            case MetaLiter::SignGreater:
+                state = State::S3A;
                 break;
             case MetaLiter::Exclamation:
+                expandLex(c);
+                state = State::S4;
+                break;
+            case MetaLiter::SignLess:
+                expandLex(c);
+                state = State::S5;
+                break;
+            case MetaLiter::SignGreater:
+                expandLex(c);
+                state = State::S6;
+                break;
+            case MetaLiter::Equals:
+                expandLex(c);
+                state = State::S7;
+                break;
+            case MetaLiter::Comma:
+                expandLex(c);
+                flushLexem(TokenType::SCom);
+                break;
+            case MetaLiter::Semicolon:
+                expandLex(c);
+                flushLexem(TokenType::SSem);
                 break;
             case MetaLiter::BracketOpen:
+                expandLex(c);
+                flushLexem(TokenType::SBrackO);
                 break;
             case MetaLiter::BracketClose:
+                expandLex(c);
+                flushLexem(TokenType::SBrackC);
                 break;
             case MetaLiter::BracesOpen:
+                expandLex(c);
+                flushLexem(TokenType::SBracsO);
                 break;
             case MetaLiter::BracesClose:
+                expandLex(c);
+                flushLexem(TokenType::SBracsC);
                 break;
+            case MetaLiter::Plus:
+                expandLex(c);
+                flushLexem(TokenType::PPlus);
+                break;
+            case MetaLiter::Minus:
+                expandLex(c);
+                flushLexem(TokenType::PMinus);
+                break;
+            case MetaLiter::Multi:
+                expandLex(c);
+                flushLexem(TokenType::PMulti);
+                break;
+            case MetaLiter::Slash:
+                expandLex(c);
+                flushLexem(TokenType::PDiv);
+                break;
+            case MetaLiter::Percent:
+                expandLex(c);
+                flushLexem(TokenType::PMod);
+                break;
+            case MetaLiter::Space:
             default:
+                resetLexem();
             }
             break;
-        case State::S1A:
+        case State::S1:
             switch (w)
             {
             case MetaLiter::Alpha:
@@ -689,4 +745,4 @@ void Scanner::scan(string s)
     }
 }
 
-}
+} // namespace Lexer

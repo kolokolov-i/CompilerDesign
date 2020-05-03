@@ -12,5 +12,6 @@ public:
     int posCol;
     int length;
     std::string *image;
+    Token(int line, int column, int length, string image, TokenType type);
 };
 }

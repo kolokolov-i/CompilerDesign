@@ -18,19 +18,22 @@ public:
 private:
     void reset();
     void scan(string);
+    void flushLexem(TokenType type);
+    void expandLex(char c);
+    void resetLexem();
 
     list<MessageRecord> *errors;
     list<MessageRecord> *warnings;
     list<Token> tokens;
     State state;
     stringstream curLexem;
-    int curLine, curPos;
+    int curLine, curPos, lexemLen;
 };
 
 enum class State
 {
     S0,
-    S1A,
+    S1,
     S2A,
     S2B,
     S2C,
