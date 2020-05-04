@@ -1,18 +1,19 @@
 #include "Lexer.h"
 #include "Token.h"
-#include <list>
+#include <vector>
 #include <string>
+#include <map>
 
 namespace Lexer
 {
 
-Scanner::Scanner(list<MessageRecord> *pErrors, list<MessageRecord> *pWarnings)
+Scanner::Scanner(vector<MessageRecord> *pErrors, vector<MessageRecord> *pWarnings)
 {
     this->errors = pErrors;
     this->warnings = pWarnings;
 }
 
-list<Token> Scanner::scan(list<string> text)
+vector<Token> Scanner::scan(vector<string> text)
 {
     reset();
     curLine = 0;
@@ -36,6 +37,19 @@ void Scanner::flushLexem(TokenType type)
     resetLexem();
 }
 
+void Scanner::flushIDKW()
+{
+    string s = curLexem.str();
+    map<string, TokenType> kw = getKeyWords();
+    if(kw.count(s) != 0){
+        tokens.push_back(Token(curLine, curPos, lexemLen, s, kw[s]));
+    }
+    else{
+        tokens.push_back(Token(curLine, curPos, lexemLen, s, TokenType::ID));
+    }
+    resetLexem();
+}
+
 void Scanner::resetLexem()
 {
     state = State::S0;
@@ -55,7 +69,7 @@ void Scanner::scan(string s)
     curPos = 0;
     while (lineLoop)
     {
-        char c = s[curPos];
+        char c = s[curPos++];
         MetaLiter w = translit(c);
         switch (state)
         {
@@ -147,46 +161,12 @@ void Scanner::scan(string s)
             switch (w)
             {
             case MetaLiter::Alpha:
-                break;
             case MetaLiter::Digit:
-                break;
-            case MetaLiter::Space:
-                break;
-            case MetaLiter::Semicolon:
-                break;
-            case MetaLiter::Dot:
-                break;
-            case MetaLiter::Comma:
-                break;
-            case MetaLiter::Apostrophe:
-                break;
-            case MetaLiter::Equals:
-                break;
-            case MetaLiter::Plus:
-                break;
-            case MetaLiter::Minus:
-                break;
-            case MetaLiter::Multi:
-                break;
-            case MetaLiter::Slash:
-                break;
-            case MetaLiter::Percent:
-                break;
-            case MetaLiter::SignLess:
-                break;
-            case MetaLiter::SignGreater:
-                break;
-            case MetaLiter::Exclamation:
-                break;
-            case MetaLiter::BracketOpen:
-                break;
-            case MetaLiter::BracketClose:
-                break;
-            case MetaLiter::BracesOpen:
-                break;
-            case MetaLiter::BracesClose:
+                expandLex(c);
                 break;
             default:
+                curPos--;
+                flushIDKW();
             }
             break;
         case State::S2A:

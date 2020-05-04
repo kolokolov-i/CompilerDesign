@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <map>
 
 namespace Lexer
 {
@@ -40,31 +41,32 @@ enum class TokenType
 
 enum class MetaLiter
 {
-    Alpha,          // alphabet
-    Digit,          // digit
-    Space,          // space, \n, \t
-    Semicolon,      // ;
-    Dot,            // .
-    Comma,          // ,
-    Apostrophe,     // '
-    Equals,         // =
-    Plus,           // +
-    Minus,          // -
-    Multi,          // *
-    Slash,          // /
-    Percent,        // %
-    SignLess,       // <
-    SignGreater,    // >
-    Exclamation,    // !
-    BracketOpen,    // (
-    BracketClose,   // )
-    BracesOpen,     // {
-    BracesClose,    // }
+    Alpha,        // alphabet
+    Digit,        // digit
+    Space,        // space, \n, \t
+    Semicolon,    // ;
+    Dot,          // .
+    Comma,        // ,
+    Apostrophe,   // '
+    Equals,       // =
+    Plus,         // +
+    Minus,        // -
+    Multi,        // *
+    Slash,        // /
+    Percent,      // %
+    SignLess,     // <
+    SignGreater,  // >
+    Exclamation,  // !
+    BracketOpen,  // (
+    BracketClose, // )
+    BracesOpen,   // {
+    BracesClose,  // }
     Other
 };
 
 // for debug
-string* getTokensNames(){
+string *getTokensNames()
+{
     string names[30];
     names[static_cast<int>(TokenType::ID)] = "ID";
     names[static_cast<int>(TokenType::NumInt)] = "NumInt";
@@ -100,4 +102,11 @@ string* getTokensNames(){
     return names;
 }
 
+map<string, TokenType> getKeyWords()
+{
+    map<string, TokenType> result;
+    result["void"] = TokenType::KWvoid;
+    return result;
 }
+
+} // namespace Lexer

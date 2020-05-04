@@ -2,7 +2,7 @@
 #include "MessageRecord.h"
 #include "Token.h"
 #include <string>
-#include <list>
+#include <vector>
 #include <sstream>
 
 using namespace std;
@@ -12,19 +12,20 @@ namespace Lexer
 class Scanner
 {
 public:
-    Scanner(list<MessageRecord> *errors, list<MessageRecord> *warnings);
-    list<Token> scan(list<string> text);
+    Scanner(vector<MessageRecord> *errors, vector<MessageRecord> *warnings);
+    vector<Token> scan(vector<string> text);
 
 private:
     void reset();
     void scan(string);
     void flushLexem(TokenType type);
+    void flushIDKW();
     void expandLex(char c);
     void resetLexem();
 
-    list<MessageRecord> *errors;
-    list<MessageRecord> *warnings;
-    list<Token> tokens;
+    vector<MessageRecord> *errors;
+    vector<MessageRecord> *warnings;
+    vector<Token> tokens;
     State state;
     stringstream curLexem;
     int curLine, curPos, lexemLen;
