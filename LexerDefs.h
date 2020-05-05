@@ -106,6 +106,12 @@ map<string, TokenType> getKeyWords()
 {
     map<string, TokenType> result;
     result["void"] = TokenType::KWvoid;
+    result["signed"] = TokenType::KWsigned;
+    result["unsigned"] = TokenType::KWunsigned;
+    result["int"] = TokenType::KWint;
+    result["char"] = TokenType::KWchar;
+    result["double"] = TokenType::KWdouble;
+    result["while"] = TokenType::KWwhile;
     return result;
 }
 
