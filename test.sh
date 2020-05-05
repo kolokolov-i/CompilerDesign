@@ -1,1 +1,1 @@
-./main.exe tests/file3.src
+./main.exe tests/test3.src

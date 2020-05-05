@@ -42,6 +42,7 @@ void Scanner::flushLexem(TokenType type)
 void Scanner::flushIDKW()
 {
     string s = curLexem.str();
+    cout << "dbg: lexema > " << s << endl;
     map<string, TokenType> kw = getKeyWords();
     if (kw.count(s) != 0)
     {
@@ -69,12 +70,25 @@ void Scanner::expandLex(char c)
 
 void Scanner::scan(string s)
 {
+    cout << "dbg: scan line > " << s << endl;
     bool lineLoop = true;
     curPos = 0;
     while (lineLoop)
     {
-        char c = s[curPos++];
-        MetaLiter w = translit(c);
+        char c;
+        MetaLiter w;
+        if (curPos == s.size())
+        {
+            c = '\0';
+            w = MetaLiter::Space; // space at the end
+            lineLoop = false;
+        }
+        else
+        {
+            c = s[curPos++];
+            w = translit(c);
+        }
+        cout << "dbg: scan char > " << c << endl;
         switch (state)
         {
         case State::S0:
