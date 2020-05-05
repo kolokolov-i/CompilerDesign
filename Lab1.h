@@ -3,22 +3,23 @@
 #include "MessageRecord.h"
 #include "Token.h"
 #include <string>
-#include <list>
+#include <vector>
 
 using namespace Lexer;
 
 class LLk : public AbstractCompiler
 {
 private:
-    std::list<MessageRecord> *errors;
-    std::list<MessageRecord> *warnings;
-    std::list<Token> tokens;
-    std::list<std::string> listing;
+    std::vector<MessageRecord> *errors;
+    std::vector<MessageRecord> *warnings;
+    std::vector<Token> tokens;
+    std::vector<std::string> listing;
 
 public:
     LLk();
-    virtual void process(std::list<std::string> text);
-    virtual std::list<MessageRecord> getErrors();
-    virtual std::list<MessageRecord> getWarnings();
-    virtual std::list<std::string> getListing();
+    virtual ~LLk();
+    virtual void process(std::vector<std::string> text);
+    virtual std::vector<MessageRecord>* getErrors();
+    virtual std::vector<MessageRecord>* getWarnings();
+    virtual std::vector<std::string> getListing();
 };

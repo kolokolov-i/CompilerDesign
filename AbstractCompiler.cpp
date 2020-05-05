@@ -1,5 +1,14 @@
 #include "AbstractCompiler.h"
 
-bool AbstractCompiler::isSuccess(){
+AbstractCompiler::AbstractCompiler()
+{
+}
+
+AbstractCompiler::~AbstractCompiler()
+{
+}
+
+bool AbstractCompiler::isSuccess()
+{
     return this->success;
 }

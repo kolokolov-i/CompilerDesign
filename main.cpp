@@ -2,13 +2,13 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <list>
+#include <vector>
 
 using namespace std;
 
-list<string> readText(string fileName);
+vector<string> readText(string fileName);
 void report(AbstractCompiler *compiler, ostream &out);
-void writeText(string fileName, list<string> text);
+void writeText(string fileName, vector<string> text);
 
 int main(int argc, char *argv[])
 {
@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     {
         outFileName = "out.asm";
     }
-    list<string> text = readText(srcFileName);
+    vector<string> text = readText(srcFileName);
     AbstractCompiler *compiler = new LLk();
     compiler->process(text);
     report(compiler, cout);
@@ -35,16 +35,15 @@ int main(int argc, char *argv[])
     {
         writeText(outFileName, compiler->getListing());
     }
-
     delete compiler;
     return 0;
 }
 
-list<string> readText(string fileName)
+vector<string> readText(string fileName)
 {
     cout << "Source file: " << fileName << endl;
     ifstream srcFile(fileName);
-    list<string> text;
+    vector<string> text;
     if (srcFile.is_open())
     {
         string line;
@@ -57,7 +56,7 @@ list<string> readText(string fileName)
     return text;
 }
 
-void writeText(string fileName, list<string> text)
+void writeText(string fileName, vector<string> text)
 {
     cout << "Output file: " << fileName << endl;
     ofstream outFile(fileName);
@@ -81,18 +80,18 @@ void report(AbstractCompiler *compiler, ostream &out)
     {
         out << "Compilation completed unsuccessfully.\n";
     }
-    list<MessageRecord>::iterator iter;
+    vector<MessageRecord>::iterator iter;
     int i;
-    list<MessageRecord> ee = compiler->getErrors();
-    out << "Errors " << ee.size() << "\n";
-    for (i = 1, iter = ee.begin(); iter != ee.end(); ++iter)
+    vector<MessageRecord>* ee = compiler->getErrors();
+    out << "Errors " << ee->size() << "\n";
+    for (i = 1, iter = ee->begin(); iter != ee->end(); ++iter)
     {
         MessageRecord r = *iter;
         out << i << ".[" << r.line << ", " << r.column << "]:" << r.message << "\n";
     }
-    list<MessageRecord> ww = compiler->getWarnings();
-    out << "Warnings " << ww.size() << "\n";
-    for (i = 1, iter = ww.begin(); iter != ww.end(); ++iter)
+    vector<MessageRecord>* ww = compiler->getWarnings();
+    out << "Warnings " << ww->size() << "\n";
+    for (i = 1, iter = ww->begin(); iter != ww->end(); ++iter)
     {
         MessageRecord r = *iter;
         out << i << ".[" << r.line << ", " << r.column << "]:" << r.message << "\n";

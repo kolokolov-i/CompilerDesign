@@ -1,6 +1,7 @@
 #include "Lexer.h"
 
-using namespace Lexer;
+namespace Lexer
+{
 
 MetaLiter translit(char c)
 {
@@ -38,4 +39,5 @@ MetaLiter translit(char c)
         case '}' : return MetaLiter::BracesClose;
         default: return MetaLiter::Other;
     }
+}
 }

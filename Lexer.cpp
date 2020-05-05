@@ -1,5 +1,6 @@
 #include "Lexer.h"
 #include "Token.h"
+#include "LexerDefs.h"
 #include <vector>
 #include <string>
 #include <map>
@@ -41,10 +42,12 @@ void Scanner::flushIDKW()
 {
     string s = curLexem.str();
     map<string, TokenType> kw = getKeyWords();
-    if(kw.count(s) != 0){
+    if (kw.count(s) != 0)
+    {
         tokens.push_back(Token(curLine, curPos, lexemLen, s, kw[s]));
     }
-    else{
+    else
+    {
         tokens.push_back(Token(curLine, curPos, lexemLen, s, TokenType::ID));
     }
     resetLexem();
@@ -213,6 +216,7 @@ void Scanner::scan(string s)
             case MetaLiter::BracesClose:
                 break;
             default:
+                state = State::S0;
             }
             break;
         case State::S2B:
@@ -259,6 +263,7 @@ void Scanner::scan(string s)
             case MetaLiter::BracesClose:
                 break;
             default:
+                state = State::S0;
             }
             break;
         case State::S2C:
@@ -305,6 +310,7 @@ void Scanner::scan(string s)
             case MetaLiter::BracesClose:
                 break;
             default:
+                state = State::S0;
             }
             break;
         case State::S2D:
@@ -351,6 +357,7 @@ void Scanner::scan(string s)
             case MetaLiter::BracesClose:
                 break;
             default:
+                state = State::S0;
             }
             break;
         case State::S2E:
@@ -397,6 +404,7 @@ void Scanner::scan(string s)
             case MetaLiter::BracesClose:
                 break;
             default:
+                state = State::S0;
             }
             break;
         case State::S2F:
@@ -443,6 +451,7 @@ void Scanner::scan(string s)
             case MetaLiter::BracesClose:
                 break;
             default:
+                state = State::S0;
             }
             break;
         case State::S3A:
@@ -489,6 +498,7 @@ void Scanner::scan(string s)
             case MetaLiter::BracesClose:
                 break;
             default:
+                state = State::S0;
             }
             break;
         case State::S3B:
@@ -535,6 +545,7 @@ void Scanner::scan(string s)
             case MetaLiter::BracesClose:
                 break;
             default:
+                state = State::S0;
             }
             break;
         case State::S4:
@@ -581,6 +592,7 @@ void Scanner::scan(string s)
             case MetaLiter::BracesClose:
                 break;
             default:
+                state = State::S0;
             }
             break;
         case State::S5:
@@ -627,6 +639,7 @@ void Scanner::scan(string s)
             case MetaLiter::BracesClose:
                 break;
             default:
+                state = State::S0;
             }
             break;
         case State::S6:
@@ -673,6 +686,7 @@ void Scanner::scan(string s)
             case MetaLiter::BracesClose:
                 break;
             default:
+                state = State::S0;
             }
             break;
         case State::S7:
@@ -719,6 +733,7 @@ void Scanner::scan(string s)
             case MetaLiter::BracesClose:
                 break;
             default:
+                state = State::S0;
             }
             break;
         }

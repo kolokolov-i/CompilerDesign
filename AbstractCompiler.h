@@ -1,16 +1,19 @@
 #pragma once
 #include "MessageRecord.h"
 #include <string>
-#include <list>
+#include <vector>
 
 class AbstractCompiler
 {
 public:
-    virtual void process(std::list<std::string> text) = 0;
-    virtual std::list<MessageRecord> getErrors() = 0;
-    virtual std::list<MessageRecord> getWarnings() = 0;
-    virtual std::list<std::string> getListing() = 0;
+    AbstractCompiler();
+    virtual ~AbstractCompiler();
+    virtual void process(std::vector<std::string> text) = 0;
+    virtual std::vector<MessageRecord>* getErrors() = 0;
+    virtual std::vector<MessageRecord>* getWarnings() = 0;
+    virtual std::vector<std::string> getListing() = 0;
     bool isSuccess();
-    protected:
+
+protected:
     bool success = false;
 };
