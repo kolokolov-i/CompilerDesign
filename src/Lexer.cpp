@@ -70,7 +70,7 @@ void Scanner::expandLex(char c)
 
 void Scanner::scan(string s)
 {
-    cout << "dbg: scan line > " << s << endl;
+    // cout << "dbg: scan line > " << s << endl;
     bool lineLoop = true;
     curPos = 0;
     while (lineLoop)
@@ -87,8 +87,8 @@ void Scanner::scan(string s)
         {
             c = s[curPos++];
             w = translit(c);
+            // cout << "dbg: scan char > " << c << endl;
         }
-        cout << "dbg: scan char > " << c << endl;
         switch (state)
         {
         case State::S0:
@@ -190,48 +190,29 @@ void Scanner::scan(string s)
         case State::S2A:
             switch (w)
             {
-            case MetaLiter::Alpha:
-                break;
             case MetaLiter::Digit:
-                break;
-            case MetaLiter::Space:
-                break;
-            case MetaLiter::Semicolon:
+                expandLex(c);
                 break;
             case MetaLiter::Dot:
+                expandLex(c);
+                state = State::S2C;
                 break;
-            case MetaLiter::Comma:
+            case MetaLiter::Alpha:
+                if(c == 'E' || c == 'e'){
+                    expandLex(c);
+                    state = State::S2D;
+                }
+                else{
+                    curPos--;
+                    flushLexem(TokenType::NumInt);
+                }
                 break;
-            case MetaLiter::Apostrophe:
-                break;
-            case MetaLiter::Equals:
-                break;
-            case MetaLiter::Plus:
-                break;
-            case MetaLiter::Minus:
-                break;
-            case MetaLiter::Multi:
-                break;
-            case MetaLiter::Slash:
-                break;
-            case MetaLiter::Percent:
-                break;
-            case MetaLiter::SignLess:
-                break;
-            case MetaLiter::SignGreater:
-                break;
-            case MetaLiter::Exclamation:
-                break;
-            case MetaLiter::BracketOpen:
-                break;
-            case MetaLiter::BracketClose:
-                break;
-            case MetaLiter::BracesOpen:
-                break;
-            case MetaLiter::BracesClose:
+            case MetaLiter::Space:
+                flushLexem(TokenType::NumInt);
                 break;
             default:
-                state = State::S0;
+                curPos--;
+                flushLexem(TokenType::NumInt);
             }
             break;
         case State::S2B:
