@@ -37,6 +37,7 @@ std::map<TokenType, std::string> getTokensNames()
     result[TokenType::KWdouble] = "KWdouble";
     result[TokenType::KWchar] = "KWchar";
     result[TokenType::KWwhile] = "KWwhile";
+    result[TokenType::KWstruct] = "KWstruct";
     return result;
 }
 
@@ -50,6 +51,7 @@ std::map<std::string, TokenType> getKeyWords()
     result["char"] = TokenType::KWchar;
     result["double"] = TokenType::KWdouble;
     result["while"] = TokenType::KWwhile;
+    result["struct"] = TokenType::KWstruct;
     return result;
 }
 } // namespace Lexer

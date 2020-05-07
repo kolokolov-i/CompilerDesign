@@ -36,7 +36,8 @@ enum class TokenType
     KWunsigned, // unsigned
     KWdouble,   // double
     KWchar,     // char
-    KWwhile     // while
+    KWwhile,    // while
+    KWstruct    // struct
 };
 
 enum class MetaLiter

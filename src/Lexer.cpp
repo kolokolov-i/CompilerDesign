@@ -197,8 +197,8 @@ void Scanner::scan(string s)
                 expandLex(c);
                 break;
             default:
-                curPos--;
                 flushIDKW();
+                curPos--;
             }
             break;
         case State::S2A:
@@ -219,14 +219,16 @@ void Scanner::scan(string s)
                 }
                 else
                 {
-                    curPos--;
                     flushError();
+                    curPos--;
                 }
                 break;
-            default:
-                curPos--;
             case MetaLiter::Space:
                 flushLexem(TokenType::NumInt);
+                break;
+            default:
+                flushLexem(TokenType::NumInt);
+                curPos--;
             }
             break;
         case State::S2B:
@@ -237,9 +239,8 @@ void Scanner::scan(string s)
                 state = State::S2C;
                 break;
             default:
-                expandLex(c);
                 flushLexem(TokenType::SDot);
-                state = State::S0;
+                curPos--;
             }
             break;
         case State::S2C:
@@ -256,14 +257,16 @@ void Scanner::scan(string s)
                 }
                 else
                 {
-                    curPos--;
                     flushLexem(TokenType::NumFloat);
+                    curPos--;
                 }
                 break;
-            default:
-                curPos--;
             case MetaLiter::Space:
                 flushLexem(TokenType::NumFloat);
+                break;
+            default:
+                flushLexem(TokenType::NumFloat);
+                curPos--;
             }
             break;
         case State::S2D:
@@ -278,9 +281,11 @@ void Scanner::scan(string s)
                 expandLex(c);
                 state = State::S2E;
                 break;
+            case MetaLiter::Space:
+                flushError();
+                break;
             default:
                 curPos--;
-            case MetaLiter::Space:
                 flushError();
             }
             break;
@@ -301,10 +306,12 @@ void Scanner::scan(string s)
             case MetaLiter::Digit:
                 expandLex(c);
                 break;
-            default:
-                curPos--;
             case MetaLiter::Space:
                 flushLexem(TokenType::NumExp);
+                break;
+            default:
+                flushLexem(TokenType::NumExp);
+                curPos--;
             }
             break;
         case State::S3A:
@@ -363,10 +370,12 @@ void Scanner::scan(string s)
                 expandLex(c);
                 flushLexem(TokenType::PNotEq);
                 break;
-            default:
-                curPos--;
             case MetaLiter::Space:
                 flushError();
+                break;
+            default:
+                flushError();
+                curPos--;
             }
             break;
         case State::S5:
@@ -376,10 +385,12 @@ void Scanner::scan(string s)
                 expandLex(c);
                 flushLexem(TokenType::PLessEq);
                 break;
-            default:
-                curPos--;
             case MetaLiter::Space:
                 flushLexem(TokenType::PLess);
+                break;
+            default:
+                flushLexem(TokenType::PLess);
+                curPos--;
             }
             break;
         case State::S6:
@@ -389,10 +400,12 @@ void Scanner::scan(string s)
                 expandLex(c);
                 flushLexem(TokenType::PGretEq);
                 break;
-            default:
-                curPos--;
             case MetaLiter::Space:
                 flushLexem(TokenType::PGret);
+                break;
+            default:
+                flushLexem(TokenType::PGret);
+                curPos--;
             }
             break;
         case State::S7:
@@ -402,21 +415,23 @@ void Scanner::scan(string s)
                 expandLex(c);
                 flushLexem(TokenType::PEquals);
                 break;
-            default:
-                curPos--;
             case MetaLiter::Space:
                 flushLexem(TokenType::PAssign);
+                break;
+            default:
+                flushLexem(TokenType::PAssign);
+                curPos--;
             }
             break;
         case State::S8:
             switch (w)
             {
             case MetaLiter::Slash:
-                lineLoop = false;
+                lineLoop = false; // comment
                 break;
             default:
-                curPos--;
                 flushLexem(TokenType::PDiv);
+                curPos--;
             }
         }
     }
