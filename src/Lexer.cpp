@@ -35,7 +35,7 @@ void Scanner::reset()
 
 void Scanner::flushLexem(TokenType type)
 {
-    tokens.push_back(Token(curLine, curPos, lexemLen, curLexem.str(), type));
+    tokens.push_back(Token(curLine, lexPos, lexemLen, curLexem.str(), type));
     resetLexem();
 }
 
@@ -62,11 +62,11 @@ void Scanner::flushIDKW()
     map<string, TokenType> kw = getKeyWords();
     if (kw.count(s) != 0)
     {
-        tokens.push_back(Token(curLine, curPos, lexemLen, s, kw[s]));
+        tokens.push_back(Token(curLine, lexPos, lexemLen, s, kw[s]));
     }
     else
     {
-        tokens.push_back(Token(curLine, curPos, lexemLen, s, TokenType::ID));
+        tokens.push_back(Token(curLine, lexPos, lexemLen, s, TokenType::ID));
     }
     resetLexem();
 }
@@ -106,6 +106,7 @@ void Scanner::scan(string s)
         switch (state)
         {
         case State::S0:
+            lexPos = curPos - 1;
             switch (w)
             {
             case MetaLiter::Alpha:

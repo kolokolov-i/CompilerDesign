@@ -52,7 +52,7 @@ private:
     vector<Token> tokens;
     State state;
     stringstream curLexem;
-    int curLine, curPos, lexemLen;
+    int curLine, curPos, lexemLen, lexPos;
 };
 
 MetaLiter translit(char c);
