@@ -22,10 +22,12 @@ enum class State
     S2F,
     S3A,
     S3B,
+    S3C,
     S4,
     S5,
     S6,
-    S7
+    S7,
+    S8
 };
 
 class Scanner
@@ -39,6 +41,8 @@ private:
     void scan(string);
     void flushLexem(TokenType type);
     void flushIDKW();
+    void flushError();
+    void flushError(string message);
     void expandLex(char c);
     void resetLexem();
 

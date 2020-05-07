@@ -39,6 +39,18 @@ void Scanner::flushLexem(TokenType type)
     resetLexem();
 }
 
+void Scanner::flushError()
+{
+    errors->push_back(MessageRecord(curLine, curPos, "Unrecognized token \"" + curLexem.str() + "\""));
+    resetLexem();
+}
+
+void Scanner::flushError(string message)
+{
+    errors->push_back(MessageRecord(curLine, curPos, message));
+    resetLexem();
+}
+
 void Scanner::flushIDKW()
 {
     string s = curLexem.str();
@@ -164,7 +176,7 @@ void Scanner::scan(string s)
                 break;
             case MetaLiter::Slash:
                 expandLex(c);
-                flushLexem(TokenType::PDiv);
+                state = State::S8;
                 break;
             case MetaLiter::Percent:
                 expandLex(c);
@@ -172,7 +184,7 @@ void Scanner::scan(string s)
                 break;
             case MetaLiter::Space:
             default:
-                resetLexem();
+                flushError();
             }
             break;
         case State::S1:
@@ -212,383 +224,144 @@ void Scanner::scan(string s)
                 break;
             default:
                 curPos--;
-                flushLexem(TokenType::NumInt);
+                flushError();
             }
             break;
         case State::S2B:
             switch (w)
             {
-            case MetaLiter::Alpha:
-                break;
             case MetaLiter::Digit:
-                break;
-            case MetaLiter::Space:
-                break;
-            case MetaLiter::Semicolon:
-                break;
-            case MetaLiter::Dot:
-                break;
-            case MetaLiter::Comma:
-                break;
-            case MetaLiter::Apostrophe:
-                break;
-            case MetaLiter::Equals:
-                break;
-            case MetaLiter::Plus:
-                break;
-            case MetaLiter::Minus:
-                break;
-            case MetaLiter::Multi:
-                break;
-            case MetaLiter::Slash:
-                break;
-            case MetaLiter::Percent:
-                break;
-            case MetaLiter::SignLess:
-                break;
-            case MetaLiter::SignGreater:
-                break;
-            case MetaLiter::Exclamation:
-                break;
-            case MetaLiter::BracketOpen:
-                break;
-            case MetaLiter::BracketClose:
-                break;
-            case MetaLiter::BracesOpen:
-                break;
-            case MetaLiter::BracesClose:
+                expandLex(c);
+                state = State::S2C;
                 break;
             default:
+                expandLex(c);
+                flushLexem(TokenType::SDot);
                 state = State::S0;
             }
             break;
         case State::S2C:
             switch (w)
             {
-            case MetaLiter::Alpha:
-                break;
             case MetaLiter::Digit:
+                expandLex(c);
                 break;
-            case MetaLiter::Space:
-                break;
-            case MetaLiter::Semicolon:
-                break;
-            case MetaLiter::Dot:
-                break;
-            case MetaLiter::Comma:
-                break;
-            case MetaLiter::Apostrophe:
-                break;
-            case MetaLiter::Equals:
-                break;
-            case MetaLiter::Plus:
-                break;
-            case MetaLiter::Minus:
-                break;
-            case MetaLiter::Multi:
-                break;
-            case MetaLiter::Slash:
-                break;
-            case MetaLiter::Percent:
-                break;
-            case MetaLiter::SignLess:
-                break;
-            case MetaLiter::SignGreater:
-                break;
-            case MetaLiter::Exclamation:
-                break;
-            case MetaLiter::BracketOpen:
-                break;
-            case MetaLiter::BracketClose:
-                break;
-            case MetaLiter::BracesOpen:
-                break;
-            case MetaLiter::BracesClose:
+            case MetaLiter::Alpha:
+                if(c == 'E' || c == 'e'){
+                    expandLex(c);
+                    state = State::S2D;
+                }
+                else{
+                    curPos--;
+                    flushLexem(TokenType::NumFloat);
+                }
                 break;
             default:
+                curPos--;
+            case MetaLiter::Space:
                 state = State::S0;
+                break;
             }
             break;
         case State::S2D:
             switch (w)
             {
-            case MetaLiter::Alpha:
-                break;
             case MetaLiter::Digit:
-                break;
-            case MetaLiter::Space:
-                break;
-            case MetaLiter::Semicolon:
-                break;
-            case MetaLiter::Dot:
-                break;
-            case MetaLiter::Comma:
-                break;
-            case MetaLiter::Apostrophe:
-                break;
-            case MetaLiter::Equals:
+                expandLex(c);
+                state = State::S2F;
                 break;
             case MetaLiter::Plus:
-                break;
             case MetaLiter::Minus:
-                break;
-            case MetaLiter::Multi:
-                break;
-            case MetaLiter::Slash:
-                break;
-            case MetaLiter::Percent:
-                break;
-            case MetaLiter::SignLess:
-                break;
-            case MetaLiter::SignGreater:
-                break;
-            case MetaLiter::Exclamation:
-                break;
-            case MetaLiter::BracketOpen:
-                break;
-            case MetaLiter::BracketClose:
-                break;
-            case MetaLiter::BracesOpen:
-                break;
-            case MetaLiter::BracesClose:
+                expandLex(c);
+                state = State::S2E;
                 break;
             default:
-                state = State::S0;
+                curPos--;
+            case MetaLiter::Space:
+                flushError();
+                break;
             }
             break;
         case State::S2E:
             switch (w)
             {
-            case MetaLiter::Alpha:
-                break;
             case MetaLiter::Digit:
-                break;
-            case MetaLiter::Space:
-                break;
-            case MetaLiter::Semicolon:
-                break;
-            case MetaLiter::Dot:
-                break;
-            case MetaLiter::Comma:
-                break;
-            case MetaLiter::Apostrophe:
-                break;
-            case MetaLiter::Equals:
-                break;
-            case MetaLiter::Plus:
-                break;
-            case MetaLiter::Minus:
-                break;
-            case MetaLiter::Multi:
-                break;
-            case MetaLiter::Slash:
-                break;
-            case MetaLiter::Percent:
-                break;
-            case MetaLiter::SignLess:
-                break;
-            case MetaLiter::SignGreater:
-                break;
-            case MetaLiter::Exclamation:
-                break;
-            case MetaLiter::BracketOpen:
-                break;
-            case MetaLiter::BracketClose:
-                break;
-            case MetaLiter::BracesOpen:
-                break;
-            case MetaLiter::BracesClose:
+                expandLex(c);
+                state = State::S2F;
                 break;
             default:
-                state = State::S0;
+                flushError();
             }
             break;
         case State::S2F:
             switch (w)
             {
-            case MetaLiter::Alpha:
-                break;
             case MetaLiter::Digit:
-                break;
-            case MetaLiter::Space:
-                break;
-            case MetaLiter::Semicolon:
-                break;
-            case MetaLiter::Dot:
-                break;
-            case MetaLiter::Comma:
-                break;
-            case MetaLiter::Apostrophe:
-                break;
-            case MetaLiter::Equals:
-                break;
-            case MetaLiter::Plus:
-                break;
-            case MetaLiter::Minus:
-                break;
-            case MetaLiter::Multi:
-                break;
-            case MetaLiter::Slash:
-                break;
-            case MetaLiter::Percent:
-                break;
-            case MetaLiter::SignLess:
-                break;
-            case MetaLiter::SignGreater:
-                break;
-            case MetaLiter::Exclamation:
-                break;
-            case MetaLiter::BracketOpen:
-                break;
-            case MetaLiter::BracketClose:
-                break;
-            case MetaLiter::BracesOpen:
-                break;
-            case MetaLiter::BracesClose:
+                expandLex(c);
                 break;
             default:
+                curPos--;
+            case MetaLiter::Space:
                 state = State::S0;
+                break;
             }
             break;
         case State::S3A:
             switch (w)
             {
-            case MetaLiter::Alpha:
-                break;
-            case MetaLiter::Digit:
-                break;
-            case MetaLiter::Space:
-                break;
-            case MetaLiter::Semicolon:
-                break;
-            case MetaLiter::Dot:
-                break;
-            case MetaLiter::Comma:
-                break;
             case MetaLiter::Apostrophe:
+                flushError("Char literal should contain one character");
                 break;
-            case MetaLiter::Equals:
-                break;
-            case MetaLiter::Plus:
-                break;
-            case MetaLiter::Minus:
-                break;
-            case MetaLiter::Multi:
-                break;
-            case MetaLiter::Slash:
-                break;
-            case MetaLiter::Percent:
-                break;
-            case MetaLiter::SignLess:
-                break;
-            case MetaLiter::SignGreater:
-                break;
-            case MetaLiter::Exclamation:
-                break;
-            case MetaLiter::BracketOpen:
-                break;
-            case MetaLiter::BracketClose:
-                break;
-            case MetaLiter::BracesOpen:
-                break;
-            case MetaLiter::BracesClose:
+            case MetaLiter::BSlash:
+                state = State::S3C;
                 break;
             default:
-                state = State::S0;
+                expandLex(c);
+                state = State::S3B;
             }
             break;
         case State::S3B:
             switch (w)
             {
-            case MetaLiter::Alpha:
-                break;
-            case MetaLiter::Digit:
-                break;
-            case MetaLiter::Space:
-                break;
-            case MetaLiter::Semicolon:
-                break;
-            case MetaLiter::Dot:
-                break;
-            case MetaLiter::Comma:
-                break;
             case MetaLiter::Apostrophe:
-                break;
-            case MetaLiter::Equals:
-                break;
-            case MetaLiter::Plus:
-                break;
-            case MetaLiter::Minus:
-                break;
-            case MetaLiter::Multi:
-                break;
-            case MetaLiter::Slash:
-                break;
-            case MetaLiter::Percent:
-                break;
-            case MetaLiter::SignLess:
-                break;
-            case MetaLiter::SignGreater:
-                break;
-            case MetaLiter::Exclamation:
-                break;
-            case MetaLiter::BracketOpen:
-                break;
-            case MetaLiter::BracketClose:
-                break;
-            case MetaLiter::BracesOpen:
-                break;
-            case MetaLiter::BracesClose:
+                flushLexem(TokenType::Char);
                 break;
             default:
-                state = State::S0;
+                flushError("Char literal should contain one character");
+            }
+            break;
+        case State::S3C:
+            switch(w)
+            {
+            case MetaLiter::Alpha:
+                switch(c)
+                {
+                    case 't':
+                        expandLex('\t'); break;
+                    case 'n':
+                        expandLex('\n'); break;
+                    case 'r':
+                        expandLex('\r'); break;
+                }
+                break;
+            case MetaLiter::Apostrophe:
+            case MetaLiter::BSlash:
+            case MetaLiter::DQuote:
+                expandLex(c);
+                state = State::S3B;
             }
             break;
         case State::S4:
             switch (w)
             {
-            case MetaLiter::Alpha:
-                break;
-            case MetaLiter::Digit:
-                break;
-            case MetaLiter::Space:
-                break;
-            case MetaLiter::Semicolon:
-                break;
-            case MetaLiter::Dot:
-                break;
-            case MetaLiter::Comma:
-                break;
-            case MetaLiter::Apostrophe:
-                break;
             case MetaLiter::Equals:
-                break;
-            case MetaLiter::Plus:
-                break;
-            case MetaLiter::Minus:
-                break;
-            case MetaLiter::Multi:
-                break;
-            case MetaLiter::Slash:
-                break;
-            case MetaLiter::Percent:
-                break;
-            case MetaLiter::SignLess:
-                break;
-            case MetaLiter::SignGreater:
-                break;
-            case MetaLiter::Exclamation:
-                break;
-            case MetaLiter::BracketOpen:
-                break;
-            case MetaLiter::BracketClose:
-                break;
-            case MetaLiter::BracesOpen:
-                break;
-            case MetaLiter::BracesClose:
+                expandLex(c);
+                flushLexem(TokenType::PNotEq);
                 break;
             default:
-                state = State::S0;
+                curPos--;
+            case MetaLiter::Space:
+                flushError();
             }
             break;
         case State::S5:
@@ -730,6 +503,18 @@ void Scanner::scan(string s)
                 break;
             default:
                 state = State::S0;
+            }
+            break;
+        case State::S8:
+            switch(w)
+            {
+                case MetaLiter::Slash:
+                    lineLoop = false;
+                    break;
+                default:
+                    curPos--;
+                    flushLexem(TokenType::PDiv);
+                    break;
             }
             break;
         }

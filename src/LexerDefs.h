@@ -48,11 +48,13 @@ enum class MetaLiter
     Dot,          // .
     Comma,        // ,
     Apostrophe,   // '
+    DQuote,       // "
     Equals,       // =
     Plus,         // +
     Minus,        // -
     Multi,        // *
     Slash,        // /
+    BSlash,       // \ .
     Percent,      // %
     SignLess,     // <
     SignGreater,  // >
