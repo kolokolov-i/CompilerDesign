@@ -260,7 +260,6 @@ void Scanner::scan(string s)
                 curPos--;
             case MetaLiter::Space:
                 state = State::S0;
-                break;
             }
             break;
         case State::S2D:
@@ -279,7 +278,6 @@ void Scanner::scan(string s)
                 curPos--;
             case MetaLiter::Space:
                 flushError();
-                break;
             }
             break;
         case State::S2E:
@@ -303,7 +301,6 @@ void Scanner::scan(string s)
                 curPos--;
             case MetaLiter::Space:
                 state = State::S0;
-                break;
             }
             break;
         case State::S3A:
@@ -341,7 +338,7 @@ void Scanner::scan(string s)
                     case 'n':
                         expandLex('\n'); break;
                     case 'r':
-                        expandLex('\r'); break;
+                        expandLex('\r');
                 }
                 break;
             case MetaLiter::Apostrophe:
@@ -367,142 +364,40 @@ void Scanner::scan(string s)
         case State::S5:
             switch (w)
             {
-            case MetaLiter::Alpha:
-                break;
-            case MetaLiter::Digit:
-                break;
-            case MetaLiter::Space:
-                break;
-            case MetaLiter::Semicolon:
-                break;
-            case MetaLiter::Dot:
-                break;
-            case MetaLiter::Comma:
-                break;
-            case MetaLiter::Apostrophe:
-                break;
             case MetaLiter::Equals:
-                break;
-            case MetaLiter::Plus:
-                break;
-            case MetaLiter::Minus:
-                break;
-            case MetaLiter::Multi:
-                break;
-            case MetaLiter::Slash:
-                break;
-            case MetaLiter::Percent:
-                break;
-            case MetaLiter::SignLess:
-                break;
-            case MetaLiter::SignGreater:
-                break;
-            case MetaLiter::Exclamation:
-                break;
-            case MetaLiter::BracketOpen:
-                break;
-            case MetaLiter::BracketClose:
-                break;
-            case MetaLiter::BracesOpen:
-                break;
-            case MetaLiter::BracesClose:
+                expandLex(c);
+                flushLexem(TokenType::PLessEq);
                 break;
             default:
-                state = State::S0;
+                curPos--;
+            case MetaLiter::Space:
+                flushLexem(TokenType::PLess);
             }
             break;
         case State::S6:
             switch (w)
             {
-            case MetaLiter::Alpha:
-                break;
-            case MetaLiter::Digit:
-                break;
-            case MetaLiter::Space:
-                break;
-            case MetaLiter::Semicolon:
-                break;
-            case MetaLiter::Dot:
-                break;
-            case MetaLiter::Comma:
-                break;
-            case MetaLiter::Apostrophe:
-                break;
             case MetaLiter::Equals:
-                break;
-            case MetaLiter::Plus:
-                break;
-            case MetaLiter::Minus:
-                break;
-            case MetaLiter::Multi:
-                break;
-            case MetaLiter::Slash:
-                break;
-            case MetaLiter::Percent:
-                break;
-            case MetaLiter::SignLess:
-                break;
-            case MetaLiter::SignGreater:
-                break;
-            case MetaLiter::Exclamation:
-                break;
-            case MetaLiter::BracketOpen:
-                break;
-            case MetaLiter::BracketClose:
-                break;
-            case MetaLiter::BracesOpen:
-                break;
-            case MetaLiter::BracesClose:
+                expandLex(c);
+                flushLexem(TokenType::PGretEq);
                 break;
             default:
-                state = State::S0;
+                curPos--;
+            case MetaLiter::Space:
+                flushLexem(TokenType::PGret);
             }
             break;
         case State::S7:
             switch (w)
             {
-            case MetaLiter::Alpha:
-                break;
-            case MetaLiter::Digit:
-                break;
-            case MetaLiter::Space:
-                break;
-            case MetaLiter::Semicolon:
-                break;
-            case MetaLiter::Dot:
-                break;
-            case MetaLiter::Comma:
-                break;
-            case MetaLiter::Apostrophe:
-                break;
             case MetaLiter::Equals:
-                break;
-            case MetaLiter::Plus:
-                break;
-            case MetaLiter::Minus:
-                break;
-            case MetaLiter::Multi:
-                break;
-            case MetaLiter::Slash:
-                break;
-            case MetaLiter::Percent:
-                break;
-            case MetaLiter::SignLess:
-                break;
-            case MetaLiter::SignGreater:
-                break;
-            case MetaLiter::Exclamation:
-                break;
-            case MetaLiter::BracketOpen:
-                break;
-            case MetaLiter::BracketClose:
-                break;
-            case MetaLiter::BracesOpen:
-                break;
-            case MetaLiter::BracesClose:
+                expandLex(c);
+                flushLexem(TokenType::PEquals);
                 break;
             default:
-                state = State::S0;
+                curPos--;
+            case MetaLiter::Space:
+                flushLexem(TokenType::PAssign);
             }
             break;
         case State::S8:
@@ -514,9 +409,7 @@ void Scanner::scan(string s)
                 default:
                     curPos--;
                     flushLexem(TokenType::PDiv);
-                    break;
             }
-            break;
         }
     }
 }
