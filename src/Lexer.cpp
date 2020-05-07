@@ -51,10 +51,14 @@ void Scanner::flushError(string message)
     resetLexem();
 }
 
+void Scanner::flushWarning(string message)
+{
+    warnings->push_back(MessageRecord(curLine, curPos, message));
+}
+
 void Scanner::flushIDKW()
 {
     string s = curLexem.str();
-    cout << "dbg: lexema > " << s << endl;
     map<string, TokenType> kw = getKeyWords();
     if (kw.count(s) != 0)
     {
@@ -82,7 +86,6 @@ void Scanner::expandLex(char c)
 
 void Scanner::scan(string s)
 {
-    // cout << "dbg: scan line > " << s << endl;
     bool lineLoop = true;
     curPos = 0;
     while (lineLoop)
@@ -99,7 +102,6 @@ void Scanner::scan(string s)
         {
             c = s[curPos++];
             w = translit(c);
-            // cout << "dbg: scan char > " << c << endl;
         }
         switch (state)
         {
@@ -115,7 +117,6 @@ void Scanner::scan(string s)
                 state = State::S2A;
                 break;
             case MetaLiter::Dot:
-                expandLex('0');
                 expandLex(c);
                 state = State::S2B;
                 break;
@@ -183,6 +184,7 @@ void Scanner::scan(string s)
                 flushLexem(TokenType::PMod);
                 break;
             case MetaLiter::Space:
+                break;
             default:
                 flushError();
             }
@@ -210,21 +212,21 @@ void Scanner::scan(string s)
                 state = State::S2C;
                 break;
             case MetaLiter::Alpha:
-                if(c == 'E' || c == 'e'){
+                if (c == 'E' || c == 'e')
+                {
                     expandLex(c);
                     state = State::S2D;
                 }
-                else{
+                else
+                {
                     curPos--;
-                    flushLexem(TokenType::NumInt);
+                    flushError();
                 }
-                break;
-            case MetaLiter::Space:
-                flushLexem(TokenType::NumInt);
                 break;
             default:
                 curPos--;
-                flushError();
+            case MetaLiter::Space:
+                flushLexem(TokenType::NumInt);
             }
             break;
         case State::S2B:
@@ -247,11 +249,13 @@ void Scanner::scan(string s)
                 expandLex(c);
                 break;
             case MetaLiter::Alpha:
-                if(c == 'E' || c == 'e'){
+                if (c == 'E' || c == 'e')
+                {
                     expandLex(c);
                     state = State::S2D;
                 }
-                else{
+                else
+                {
                     curPos--;
                     flushLexem(TokenType::NumFloat);
                 }
@@ -259,7 +263,7 @@ void Scanner::scan(string s)
             default:
                 curPos--;
             case MetaLiter::Space:
-                state = State::S0;
+                flushLexem(TokenType::NumFloat);
             }
             break;
         case State::S2D:
@@ -300,7 +304,7 @@ void Scanner::scan(string s)
             default:
                 curPos--;
             case MetaLiter::Space:
-                state = State::S0;
+                flushLexem(TokenType::NumExp);
             }
             break;
         case State::S3A:
@@ -328,19 +332,23 @@ void Scanner::scan(string s)
             }
             break;
         case State::S3C:
-            switch(w)
+            switch (w)
             {
             case MetaLiter::Alpha:
-                switch(c)
+                switch (c)
                 {
-                    case 't':
-                        expandLex('\t'); break;
-                    case 'n':
-                        expandLex('\n'); break;
-                    case 'r':
-                        expandLex('\r');
+                case 't':
+                    expandLex('\t');
+                    break;
+                case 'n':
+                    expandLex('\n');
+                    break;
+                case 'r':
+                    expandLex('\r');
                 }
                 break;
+            default:
+                flushWarning("Unrecognized escape sequence \\" + c);
             case MetaLiter::Apostrophe:
             case MetaLiter::BSlash:
             case MetaLiter::DQuote:
@@ -401,14 +409,14 @@ void Scanner::scan(string s)
             }
             break;
         case State::S8:
-            switch(w)
+            switch (w)
             {
-                case MetaLiter::Slash:
-                    lineLoop = false;
-                    break;
-                default:
-                    curPos--;
-                    flushLexem(TokenType::PDiv);
+            case MetaLiter::Slash:
+                lineLoop = false;
+                break;
+            default:
+                curPos--;
+                flushLexem(TokenType::PDiv);
             }
         }
     }

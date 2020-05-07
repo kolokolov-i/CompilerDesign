@@ -84,14 +84,14 @@ void report(AbstractCompiler *compiler, ostream &out)
     int i;
     vector<MessageRecord>* ee = compiler->getErrors();
     out << "Errors " << ee->size() << "\n";
-    for (i = 1, iter = ee->begin(); iter != ee->end(); ++iter)
+    for (i = 1, iter = ee->begin(); iter != ee->end(); ++iter, ++i)
     {
         MessageRecord r = *iter;
         out << i << ".[" << r.line << ", " << r.column << "]:" << r.message << "\n";
     }
     vector<MessageRecord>* ww = compiler->getWarnings();
     out << "Warnings " << ww->size() << "\n";
-    for (i = 1, iter = ww->begin(); iter != ww->end(); ++iter)
+    for (i = 1, iter = ww->begin(); iter != ww->end(); ++iter, ++i)
     {
         MessageRecord r = *iter;
         out << i << ".[" << r.line << ", " << r.column << "]:" << r.message << "\n";

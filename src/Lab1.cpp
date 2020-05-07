@@ -6,6 +6,7 @@
 #include <map>
 #include <fstream>
 #include <iostream>
+#include <iomanip>
 
 #define DEBUG_LEX
 
@@ -33,7 +34,11 @@ void LLk::process(vector<string> text)
     cout << "dbg: tokens count = " << tokens.size() << endl;
     for (Token t : tokens)
     {
-        debugFile << t.posLine << '\t' << t.posCol << '\t' << t.length << '\t' << names[t.type] << '\t' << t.image << '\n';
+        debugFile << std::setw(5) << std::left << t.posLine;
+        debugFile << std::setw(5) << std::left << t.posCol;
+        debugFile << std::setw(4) << std::left << t.length;
+        debugFile << std::setw(15) << std::left << names[t.type];
+        debugFile << t.image << '\n';
     }
     debugFile.close();
 #endif

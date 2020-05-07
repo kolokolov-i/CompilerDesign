@@ -43,6 +43,7 @@ private:
     void flushIDKW();
     void flushError();
     void flushError(string message);
+    void flushWarning(string message);
     void expandLex(char c);
     void resetLexem();
 
