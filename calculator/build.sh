@@ -1,0 +1,1 @@
+g++ -Wall calculator.cpp -o calculator
